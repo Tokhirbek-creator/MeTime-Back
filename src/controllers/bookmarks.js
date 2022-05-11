@@ -48,4 +48,18 @@ module.exports = {
 
     return res.status(200).json({ bookmark });
   },
+  removeBookmark: async (req, res) => {
+    const validation = bookmarkValidation(req.body);
+    if (validation.error)
+      return res.status(400).json({ errors: validation.error.details });
+    const remBookmark = await Bookmark.destroy({
+      where: req.body,
+    });
+    if (remBookmark == 0)
+      return res
+        .status(403)
+        .json({ errors: "Поста уже нет в закладках" });
+
+    return res.status(200).json({ remBookmark });
+  },
 };
