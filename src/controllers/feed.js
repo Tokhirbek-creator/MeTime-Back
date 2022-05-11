@@ -110,4 +110,23 @@ module.exports = {
     });
     return tweets;
   },
-}
+  getLikes: async (following) => {
+    const tweetIds = `SELECT Tweets.id from Tweets INNER JOIN Likes ON Tweets.id = Likes.tweetId WHERE Likes.userId IN (${
+      following.length ? following.map((el) => "'" + el + "'").toString() : null
+    })`;
+    const tweets = await User.findAll({
+      attributes: ["firstname", "lastname", "username", "avatar"],
+      include: {
+        model: Tweet,
+        required: true,
+        where: {
+          id: {
+            [Op.in]: sequelize.literal(`(${tweetIds})`),
+          },
+        },
+      },
+      raw: true,
+    });
+    return tweets;
+  },
+};
