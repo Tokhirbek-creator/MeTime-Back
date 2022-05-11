@@ -31,4 +31,13 @@ module.exports = {
     const { error, value } = schema.validate(data);
     return { error, value };
   },
-}
+  bookmarkValidation: (data) => {
+    const schema = Joi.object({
+      userId: Joi.string().required(),
+      tweetId: Joi.string().required(),
+    }).options({ abortEarly: false });
+    const { error, value } = schema.validate(data);
+    return { error, value };
+  },
+};
+
