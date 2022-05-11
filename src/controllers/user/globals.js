@@ -40,4 +40,19 @@ module.exports = {
     });
     return tweets;
   },
+  getUserTweets: async (id, tweetAttributes) => {
+    let tweets = await User.findAll({
+      attributes: ["firstname", "lastname", "username", "avatar"],
+      include: {
+        model: Tweet,
+        required: true,
+        attributes: tweetAttributes,
+        where: {
+          userId: id,
+        },
+      },
+      raw: true,
+    });
+    return tweets;
+  },
 };
