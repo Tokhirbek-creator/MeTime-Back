@@ -54,4 +54,17 @@ module.exports = {
     });
     return tweet;
   },
+  removeTweet: async (req, res) => {
+    console.log("removing", req.body);
+    const { tweetId } = req.body;
+    // body -> {tweetId}
+    Promise.all([
+      await Tweet.destroy({ where: { id: tweetId } }),
+      await Like.destroy({ where: { tweetId } }),
+      await Comment.destroy({ where: { tweetId } }),
+      await Retweet.destroy({ where: { tweetId } }),
+    ]).then((values) => {
+      return res.status(200).json({ tweet: values[0] });
+    });
+  },
 }
