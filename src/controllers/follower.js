@@ -44,4 +44,28 @@ module.exports = {
       following,
     });
   },
+  getFollowers: async (id) => {
+    const followers = await User.findAll({
+      attributes: [
+        "id",
+        "firstname",
+        "lastname",
+        "username",
+        "email",
+        "avatar",
+        "bio",
+      ],
+      include: {
+        model: Follower,
+        as: "Followers",
+        required: true,
+        attributes: [],
+        where: {
+          followed: id,
+        },
+      },
+      raw: true,
+    });
+    return followers;
+  },
 };
