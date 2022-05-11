@@ -32,4 +32,20 @@ module.exports = {
     });
     return res.status(200).json({ tweets });
   },
+  addBookmark: async (req, res) => {
+    const validation = bookmarkValidation(req.body);
+    if (validation.error)
+      return res.status(400).json({ errors: validation.error.details });
+
+    const [bookmark, created] = await Bookmark.findOrCreate({
+      where: req.body,
+      defaults: req.body,
+    });
+    if (!created)
+      return res
+        .status(403)
+        .json({ errors: "Пост уже в закладках" });
+
+    return res.status(200).json({ bookmark });
+  },
 };
