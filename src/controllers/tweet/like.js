@@ -6,7 +6,6 @@ module.exports = {
       where: req.body,
       defaults: req.body,
     });
-    // If user tries to like tweet more than once via POST request
     if (!created) {
       return res.status(403).json({ errors: "Tweet is already liked by user" });
     }
@@ -21,7 +20,6 @@ module.exports = {
     const unlike = await Like.destroy({
       where: req.body,
     });
-    // If user tries to unlike tweet that is not liked via POST request
     if (unlike == 0)
       return res
         .status(403)
@@ -34,7 +32,6 @@ module.exports = {
     return res.status(200).json({ unlike });
   },
   getTweetLikes: async (req, res) => {
-    // body -> {tweetId}
     const likes = await User.findAll({
       attributes: ["firstname", "lastname", "username", "avatar", "bio"],
       include: {
