@@ -76,4 +76,14 @@ module.exports = {
     });
     return like;
   },
-}
+  isRetweetedByMe: async (tweetId, id) => {
+    const retweet = await Retweet.findOne({
+      where: {
+        tweetId,
+        userId: id,
+      },
+    });
+    return retweet;
+  },
+};
+
