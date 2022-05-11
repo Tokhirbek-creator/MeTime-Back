@@ -11,5 +11,15 @@ module.exports = {
       raw: true,
     });
     return retweets;
-  }
+  },
+  getMyLikes: async (id) => {
+    const likes = await Like.findAll({
+      attributes: ["tweetId"],
+      where: {
+        userId: id,
+      },
+      raw: true,
+    });
+    return likes;
+  },
 };
