@@ -44,4 +44,20 @@ module.exports = {
     });
     return res.status(200).json({ unRetweet });
   },
-}
+  getTweetRetweets: async (req, res) => {
+    const retweets = await User.findAll({
+      attributes: ["firstname", "lastname", "username", "avatar", "bio"],
+      include: {
+        model: Retweet,
+        required: true,
+        attributes: ["id"],
+        where: {
+          tweetId: req.query.tweetId,
+        },
+      },
+      raw: true,
+    });
+    return res.status(200).json({ retweets });
+  },
+};
+
