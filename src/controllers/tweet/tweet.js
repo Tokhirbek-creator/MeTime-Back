@@ -4,7 +4,6 @@ const upload = require("../upload");
 
 module.exports = {
   addTweet: async (req, res) => {
-    // Joi validation checks
     const validation = addTweetValidation(req.body);
     if (validation.error)
       return res.status(400).json({ errors: validation.error.details });
@@ -22,5 +21,20 @@ module.exports = {
         return res.status(400).json({ errors: err });
       }
     });
+  },
+  getTweet: async (req, res) => {
+    Promise.all([
+      module.exports.getUserTweet(req.query.tweetId, req.query.username),
+      module.exports.isLikedByMe(req.query.tweetId, req.query.myId),
+      module.exports.isRetweetedByMe(req.query.tweetId, req.query.myId),
+    ]).then((values) => {
+      let tweet = { ...values[0] };
+      tweet = { ...tweet, selfLiked: values[1] ? true : false };
+      tweet = { ...tweet, selfRetweeted: values[2] ? true : false };
+      return res.status(200).json({ tweet });
+    });
+  },
+  removeTweet: async (req, res) => {
+    res.status(200).json({});
   },
 }
