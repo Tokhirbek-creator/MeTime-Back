@@ -75,4 +75,20 @@ module.exports = {
     });
     return users;
   },
+  getTweets: async (following) => {
+    const tweets = await User.findAll({
+      attributes: ["firstname", "lastname", "username", "avatar"],
+      include: {
+        model: Tweet,
+        required: true,
+        where: {
+          userId: {
+            [Op.in]: following,
+          },
+        },
+      },
+      raw: true,
+    });
+    return tweets;
+  },
 }
