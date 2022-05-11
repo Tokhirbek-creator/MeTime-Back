@@ -57,7 +57,6 @@ module.exports = {
   removeTweet: async (req, res) => {
     console.log("removing", req.body);
     const { tweetId } = req.body;
-    // body -> {tweetId}
     Promise.all([
       await Tweet.destroy({ where: { id: tweetId } }),
       await Like.destroy({ where: { tweetId } }),
