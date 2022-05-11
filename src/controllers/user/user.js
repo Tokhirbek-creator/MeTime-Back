@@ -94,4 +94,37 @@ module.exports = {
       }
     );
   },
+  loginUser: async (req, res) => {
+    const user = await User.findOne({
+      where: {
+        [Op.or]: [{ username: req.body.user }, { email: req.body.user }],
+      },
+      raw: true,
+    });
+    if (!user)
+      return res.status(401).json({ user: "Неверный никнейм / email" });
+
+    const match = await bcrypt.compare(req.body.password, user.password);
+    if (!match) return res.status(401).json({ password: "Неверный пароль" });
+
+    const token = signJwt({
+      user: {
+        id: user.id,
+      },
+    });
+    return res.status(200).json({
+      user: {
+        id: user.id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        username: user.username,
+        avatar: user.avatar,
+        cover: user.cover,
+        dob: user.dob,
+        location: user.location,
+        bio: user.bio,
+        token,
+      },
+    });
+  },
 };
