@@ -6,7 +6,6 @@ module.exports = {
   getFeed: async (req, res) => {
     if (!req.query.userId)
       return res.status(400).json({ errors: 'userId is required' });
-
     module.exports.getMyFollowing(req.query.userId).then((response) => {
       const following = [];
       response.forEach((el) => following.push(el.id));
