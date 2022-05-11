@@ -44,4 +44,21 @@ module.exports = {
       });
     });
   },
+  whoFollow: async (req, res) => {
+    console.log("follow");
+    // query -> {userId}
+    // Get my following and don't select
+    const following = `SELECT Users.id FROM Users INNER JOIN Followers ON Users.id = Followers.followed WHERE follower = '${req.query.userId}'`;
+    const whoFollow = await User.findAll({
+      attributes: ["id", "firstname", "lastname", "username", "avatar"],
+      where: {
+        id: {
+          [Op.not]: req.query.userId,
+          [Op.notIn]: sequelize.literal(`(${following})`),
+        },
+      },
+      limit: 3,
+    });
+    return res.status(200).json({ whoFollow });
+  },
 }
