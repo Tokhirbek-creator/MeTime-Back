@@ -17,4 +17,20 @@ module.exports = {
     });
     return res.status(200).json({ like });
   },
+  unlikeTweet: async (req, res) => {
+    const unlike = await Like.destroy({
+      where: req.body,
+    });
+    // If user tries to unlike tweet that is not liked via POST request
+    if (unlike == 0)
+      return res
+        .status(403)
+        .json({ errors: "Пост уже не нравится пользователю" });
+
+    await Tweet.decrement("likesCount", {
+      by: 1,
+      where: { id: req.body.tweetId },
+    });
+    return res.status(200).json({ unlike });
+  },
 }
