@@ -183,4 +183,28 @@ module.exports = {
       res.status(200).json({ tweets });
     });
   },
+  getLikesByUserId: async (req, res) => {
+    Promise.all([
+      getLikedTweets(req.query.userId, module.exports.tweetAttributes),
+      getMyRetweets(req.query.myId),
+      getMyLikes(req.query.myId),
+      getMyRetweets(req.query.userId),
+    ]).then((values) => {
+      let likedTweets = values[0];
+      const retweetSet = new Set();
+      const likeSet = new Set();
+      const userRetweetSet = new Set();
+      values[1].map((tweet) => retweetSet.add(tweet.tweetId));
+      values[2].map((tweet) => likeSet.add(tweet.tweetId));
+      values[3].map((tweet) => userRetweetSet.add(tweet.tweetId));
+      likedTweets = likedTweets.map((tweet) => {
+        let deepCopy = { ...tweet };
+        if (retweetSet.has(tweet["Tweets.id"])) deepCopy.selfRetweeted = true;
+        if (likeSet.has(tweet["Tweets.id"])) deepCopy.selfLiked = true;
+        if (userRetweetSet.has(tweet["Tweets.id"])) deepCopy.isRetweet = true;
+        return deepCopy;
+      });
+      return res.status(200).json({ tweets: likedTweets });
+    });
+  },
 };
