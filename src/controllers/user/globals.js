@@ -55,4 +55,22 @@ module.exports = {
     });
     return tweets;
   },
+    getUserRetweets: async (id, tweetAttributes) => {
+    const sql = `select Retweets.tweetId from Retweets inner join Tweets on Tweets.id=Retweets.tweetId where Retweets.userId='${id}'`;
+    let retweets = await User.findAll({
+      attributes: ["firstname", "lastname", "username", "avatar"],
+      include: {
+        model: Tweet,
+        required: true,
+        attributes: tweetAttributes,
+        where: {
+          id: {
+            [Op.in]: sequelize.literal(`(${sql})`),
+          },
+        },
+      },
+      raw: true,
+    });
+    return retweets;
+  }
 };
