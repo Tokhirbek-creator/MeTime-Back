@@ -33,4 +33,21 @@ module.exports = {
     });
     return res.status(200).json({ unlike });
   },
-}
+  getTweetLikes: async (req, res) => {
+    // body -> {tweetId}
+    const likes = await User.findAll({
+      attributes: ["firstname", "lastname", "username", "avatar", "bio"],
+      include: {
+        model: Like,
+        required: true,
+        attributes: ["id"],
+        where: {
+          tweetId: req.query.tweetId,
+        },
+      },
+      raw: true,
+    });
+    return res.status(200).json({ likes });
+  },
+};
+
