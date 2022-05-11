@@ -3,7 +3,6 @@ const upload = require("../upload");
 
 module.exports = {
   addComment: async (req, res) => {
-    // body -> {tweetId, userId, text}
     console.log(req.body);
     upload(req.file, req.body.resource_type).then(async (media) => {
       console.log(media);
@@ -22,6 +21,20 @@ module.exports = {
         console.log(values);
         return res.status(200).json({ comment: values[0] });
       });
+    });
+  },
+  removeComment: async (req, res) => {
+    Promise.all([
+      await Comment.destroy({
+        where: req.body,
+      }),
+      await Tweet.decrement("commentsCount", {
+        by: 1,
+        where: { id: req.body.tweetId },
+      }),
+    ]).then((values) => {
+      console.log(values);
+      return res.status(200).json({ comment: values[0] });
     });
   },
 }
