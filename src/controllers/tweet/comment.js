@@ -37,4 +37,19 @@ module.exports = {
       return res.status(200).json({ comment: values[0] });
     });
   },
-}
+  getTweetComments: async (req, res) => {
+    // body -> {tweetId}
+    const comments = await User.findAll({
+      attributes: ["firstname", "lastname", "username", "avatar"],
+      include: {
+        model: Comment,
+        required: true,
+        where: req.query,
+      },
+      order: [[Comment, "createdAt", "DESC"]],
+      raw: true,
+    });
+    return res.status(200).json({ comments });
+  },
+};
+
