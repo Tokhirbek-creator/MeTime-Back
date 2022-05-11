@@ -25,4 +25,23 @@ module.exports = {
     });
     return res.status(200).json(retweet);
   },
+  removeRetweet: async (req, res) => {
+    const validation = addRetweetValidation(req.body);
+    if (validation.error)
+      return res.status(400).json({ errors: validation.error.details });
+
+    const unRetweet = await Retweet.destroy({
+      where: req.body,
+    });
+    if (unRetweet == 0)
+      return res
+        .status(403)
+        .json({ errors: "Пользователь ещё не поделился постом" });
+
+    await Tweet.decrement("retweetsCount", {
+      by: 1,
+      where: { id: req.body.tweetId },
+    });
+    return res.status(200).json({ unRetweet });
+  },
 }
