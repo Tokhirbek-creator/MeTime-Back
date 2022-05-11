@@ -67,4 +67,13 @@ module.exports = {
       return res.status(200).json({ tweet: values[0] });
     });
   },
+  isLikedByMe: async (tweetId, id) => {
+    const like = await Like.findOne({
+      where: {
+        tweetId,
+        userId: id,
+      },
+    });
+    return like;
+  },
 }
