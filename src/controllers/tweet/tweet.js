@@ -37,4 +37,21 @@ module.exports = {
   removeTweet: async (req, res) => {
     res.status(200).json({});
   },
+  getUserTweet: async (tweetId, username) => {
+    const tweet = await User.findOne({
+      attributes: ["firstname", "lastname", "username", "avatar"],
+      where: {
+        username: username,
+      },
+      include: {
+        model: Tweet,
+        where: {
+          id: tweetId,
+        },
+        required: true,
+      },
+      raw: true,
+    });
+    return tweet;
+  },
 }
