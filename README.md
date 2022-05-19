@@ -1,8 +1,19 @@
 # MeTime Backend
 MeTime-Front **[here](https://github.com/Vitkanda/meTime_front)**
 
+
+## Requirements:
+1. Node.js
+2. Expess
+3. NPM
+4. MySQL
+5. JWT
+6. Hapi/joi
+7. Cloudinary
+
+
 ## Run locally
-Requirements: Node, npm, MySQL
+
 
 Create `.env` file at the root of the project with the following contents:
 
