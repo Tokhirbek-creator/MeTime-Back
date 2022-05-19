@@ -1,4 +1,4 @@
-# MeTime-Backend
+# MeTime Backend
 MeTime-Front **[here](https://github.com/Vitkanda/meTime_front)**
 
 ## Run locally
